@@ -25,11 +25,12 @@ impl OrderBook {
                 let price = Price::new(price);
                 match self.bids.get_mut(&price) {
                     Some(limit) => {
-                        println!("Already have limits")
+                        limit.add_order(order);
                     }
                     None => {
                         let mut limit = Limit::new(price);
                         limit.add_order(order);
+                        self.bids.insert(price, limit);
                     }
                 }
             }
@@ -37,7 +38,7 @@ impl OrderBook {
         }
     }
 }
-#[derive(Debug, Eq, PartialEq, Hash)]
+#[derive(Debug, Eq, PartialEq, Hash, Copy, Clone)]
 struct Price {
     integral: u64,
     fractional: u64,
@@ -88,9 +89,11 @@ impl Order {
 }
 
 fn main() {
-    //let buy_order = Order::new(10.0, BidOrAsk::Bid);
-    //let orderbook = OrderBook::new();
-
-    let price = Price::new(50.0);
-    println!("Price is : {:?}", price);
+    let buy_order = Order::new(5.0, BidOrAsk::Bid);
+    let buy_order_second = Order::new(5.0, BidOrAsk::Bid);
+    //let sell_order = Order::new(5.0, BidOrAsk::Ask);
+    let mut orderbook = OrderBook::new();
+    orderbook.add_order(4.4, buy_order);
+    orderbook.add_order(4.4, buy_order_second);
+    println!("OrderBook  is : {:?}", orderbook);
 }
