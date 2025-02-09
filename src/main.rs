@@ -19,7 +19,7 @@ impl OrderBook {
             asks: HashMap::new(),
         }
     }
-    fn add_order(&mut self, price: f64, order: &Order) {
+    fn add_order(&mut self, price: f64, order: Order) {
         match order.bid_or_ask {
             BidOrAsk::Bid => {
                 let price = Price::new(price);
@@ -29,6 +29,7 @@ impl OrderBook {
                     }
                     None => {
                         let mut limit = Limit::new(price);
+                        limit.add_order(order);
                     }
                 }
             }
@@ -87,12 +88,9 @@ impl Order {
 }
 
 fn main() {
-    let mut limit = Limit::new(50.0);
-    let buy_order = Order::new(10.0, BidOrAsk::Bid);
-    let orderbook = OrderBook::new();
+    //let buy_order = Order::new(10.0, BidOrAsk::Bid);
+    //let orderbook = OrderBook::new();
 
-    limit.add_order(buy_order);
-    println!("Limit is : {:?}", limit);
     let price = Price::new(50.0);
     println!("Price is : {:?}", price);
 }
